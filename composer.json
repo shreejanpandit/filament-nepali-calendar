@@ -1,0 +1,24 @@
+{
+    "name": "shreejan/filament-nepali-date-picker",
+    "description": "Nepali calendar plugin for Filament PHP DatePicker and DateTimePicker",
+    "type": "package",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Shreejan\\FilamentNepaliDatePicker\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Shreejan\\FilamentNepaliDatePicker\\NepaliDatePickerServiceProvider"
+            ]
+        }
+    },
+    "require": {
+        "php": "^8.2",
+        "filament/filament": "^4.0"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

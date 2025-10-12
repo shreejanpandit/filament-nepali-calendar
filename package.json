@@ -1,0 +1,37 @@
+{
+    "name": "shreejan/filament-nepali-date-picker",
+    "version": "1.0.0",
+    "description": "Nepali calendar plugin for Filament PHP DatePicker and DateTimePicker",
+    "main": "index.js",
+    "type": "module",
+    "scripts": {
+        "build": "npm run build-js && npm run build-css",
+        "build-js": "mkdir -p resources/dist/js && esbuild resources/js/nepali-date-time-picker.js --outfile=resources/dist/js/nepali-date-time-picker.js --bundle --minify && cp resources/js/nepali-date-picker.js resources/dist/js/nepali-date-picker.js",
+        "build-css": "mkdir -p resources/dist/css && cp resources/css/nepali-date-picker.css resources/dist/css/nepali-date-picker.css",
+        "dev": "npm run build-js && npm run build-css"
+    },
+    "keywords": [
+        "filament",
+        "nepali",
+        "date-picker",
+        "calendar",
+        "bikram-sambat",
+        "laravel"
+    ],
+    "author": "Shreejan",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/shreejan/filament-nepali-date-picker.git"
+    },
+    "bugs": {
+        "url": "https://github.com/shreejan/filament-nepali-date-picker/issues"
+    },
+    "homepage": "https://github.com/shreejan/filament-nepali-date-picker#readme",
+    "dependencies": {
+        "jquery": "^3.6.0"
+    },
+    "devDependencies": {
+        "esbuild": "^0.19.0"
+    }
+}
