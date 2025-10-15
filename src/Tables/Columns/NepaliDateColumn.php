@@ -10,6 +10,7 @@ class NepaliDateColumn extends TextColumn
 
     protected string $dateFormat = '%Y-%m-%d';
     protected bool $weekdaysMin = true;
+    protected string $displayFormat = 'nepali-numbers'; // 'nepali-numbers', 'english-numbers', 'nepali-text'
 
     public function dateFormat(string $format): static
     {
@@ -23,6 +24,12 @@ class NepaliDateColumn extends TextColumn
         return $this;
     }
 
+    public function displayFormat(string $format): static
+    {
+        $this->displayFormat = $format;
+        return $this;
+    }
+
     public function getDateFormat(): string
     {
         return $this->dateFormat;
@@ -33,11 +40,17 @@ class NepaliDateColumn extends TextColumn
         return $this->weekdaysMin;
     }
 
+    public function getDisplayFormat(): string
+    {
+        return $this->displayFormat;
+    }
+
     public function getOptions(): array
     {
         return [
             'dateFormat' => $this->getDateFormat(),
             'weekdaysMin' => $this->getWeekdaysMin(),
+            'displayFormat' => $this->getDisplayFormat(),
         ];
     }
 }
