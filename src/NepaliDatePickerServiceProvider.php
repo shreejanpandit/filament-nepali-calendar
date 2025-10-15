@@ -3,7 +3,6 @@
 namespace Shreejan\FilamentNepaliDatePicker;
 
 use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\DateTimePicker;
 use Illuminate\Support\ServiceProvider;
 
 class NepaliDatePickerServiceProvider extends ServiceProvider
@@ -34,14 +33,6 @@ class NepaliDatePickerServiceProvider extends ServiceProvider
                 ], true);
         });
 
-        DateTimePicker::macro('nepali', function (array $onlyLocales = [], bool $weekdaysMin = true, int $hourMode = 24) {
-            return $this->view('filament-nepali-date-picker::components.nepali-date-picker')
-                ->extraAttributes([
-                    'onlyLocales' => is_array($onlyLocales) ? implode(',', $onlyLocales) : (string) $onlyLocales,
-                    'weekdaysMin' => (int) $weekdaysMin,
-                    'hourMode' => $hourMode,
-                ], true);
-        });
     }
 
     public function register(): void

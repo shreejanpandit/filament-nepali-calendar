@@ -6,7 +6,7 @@
     "type": "module",
     "scripts": {
         "build": "npm run build-js && npm run build-css",
-        "build-js": "mkdir -p resources/dist/js && esbuild resources/js/nepali-date-time-picker.js --outfile=resources/dist/js/nepali-date-time-picker.js --bundle --minify && cp resources/js/nepali-date-picker.js resources/dist/js/nepali-date-picker.js",
+        "build-js": "mkdir -p resources/dist/js && cp resources/js/nepali-date-picker.js resources/dist/js/nepali-date-picker.js",
         "build-css": "mkdir -p resources/dist/css && cp resources/css/nepali-date-picker.css resources/dist/css/nepali-date-picker.css",
         "dev": "npm run build-js && npm run build-css"
     },

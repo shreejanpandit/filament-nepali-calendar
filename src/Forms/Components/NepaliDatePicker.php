@@ -37,7 +37,7 @@ class NepaliDatePicker extends DatePicker
         $this->native(false);
         $this->extraAttributes([
             'weekdaysMin' => (int) $this->weekdaysMin,
-            'onlyLocales' => (int) $this->onlyLocales,
+            'onlyLocales' => is_string($this->onlyLocales) ? $this->onlyLocales : (int) $this->onlyLocales,
         ], true);
         $this->suffixIcon('heroicon-o-calendar', isInline: true);
     }
