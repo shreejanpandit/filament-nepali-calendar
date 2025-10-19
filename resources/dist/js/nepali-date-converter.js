@@ -85,7 +85,7 @@ const dateConfigMap = {
   '2079': { Baisakh: 31, Jestha: 31, Asar: 32, Shrawan: 31, Bhadra: 31, Aswin: 31, Kartik: 30, Mangsir: 29, Poush: 30, Magh: 29, Falgun: 30, Chaitra: 30 },
   '2080': { Baisakh: 31, Jestha: 32, Asar: 31, Shrawan: 32, Bhadra: 31, Aswin: 30, Kartik: 30, Mangsir: 30, Poush: 29, Magh: 29, Falgun: 30, Chaitra: 30 },
   '2081': { Baisakh: 31, Jestha: 32, Asar: 31, Shrawan: 32, Bhadra: 31, Aswin: 30, Kartik: 30, Mangsir: 30, Poush: 29, Magh: 30, Falgun: 29, Chaitra: 31 },
-  '2082': { Baisakh: 31, Jestha: 31, Asar: 32, Shrawan: 31, Bhadra: 31, Aswin: 31, Kartik: 30, Mangsir: 29, Poush: 30, Magh: 29, Falgun: 30, Chaitra: 30 },
+  '2082': { Baisakh: 31, Jestha: 32, Asar: 31, Shrawan: 32, Bhadra: 31, Aswin: 31, Kartik: 30, Mangsir: 30, Poush: 29, Magh: 29, Falgun: 30, Chaitra: 31 },
   '2083': { Baisakh: 31, Jestha: 31, Asar: 32, Shrawan: 31, Bhadra: 31, Aswin: 31, Kartik: 30, Mangsir: 29, Poush: 30, Magh: 29, Falgun: 30, Chaitra: 30 },
   '2084': { Baisakh: 31, Jestha: 32, Asar: 31, Shrawan: 32, Bhadra: 31, Aswin: 30, Kartik: 30, Mangsir: 30, Poush: 29, Magh: 29, Falgun: 30, Chaitra: 31 },
   '2085': { Baisakh: 30, Jestha: 32, Asar: 31, Shrawan: 32, Bhadra: 31, Aswin: 30, Kartik: 30, Mangsir: 30, Poush: 29, Magh: 30, Falgun: 29, Chaitra: 31 },

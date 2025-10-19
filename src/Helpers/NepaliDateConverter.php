@@ -242,8 +242,15 @@ class NepaliDateConverter
         $result = '';
         $numberStr = (string) $number;
         for ($i = 0; $i < strlen($numberStr); $i++) {
-            $digit = (int) $numberStr[$i];
-            $result .= self::$nepaliNumbers[$digit] ?? $numberStr[$i];
+            $char = $numberStr[$i];
+            // Only convert if it's a digit (0-9)
+            if (is_numeric($char) && $char >= '0' && $char <= '9') {
+                $digit = (int) $char;
+                $result .= self::$nepaliNumbers[$digit] ?? $char;
+            } else {
+                // Keep non-digit characters as-is (like dashes, spaces, etc.)
+                $result .= $char;
+            }
         }
         return $result;
     }
@@ -251,11 +258,71 @@ class NepaliDateConverter
     /**
      * Format Nepali date in different formats
      */
-    public static function formatNepaliDate($englishDate, $format = 'nepali-numbers')
+    public static function formatNepaliDate($dateInput, $format = 'nepali-numbers')
     {
-        $bsDate = self::convertToBS($englishDate);
-        $date = \Carbon\Carbon::parse($englishDate);
-        
+        try {
+            // Handle different input types
+            if (is_string($dateInput)) {
+                $dateStr = $dateInput;
+            } elseif ($dateInput instanceof \Carbon\Carbon) {
+                $dateStr = $dateInput->format('Y-m-d');
+            } else {
+                $dateStr = (string) $dateInput;
+            }
+            
+            // Check if this is already a Nepali date (year >= 2000)
+            $year = (int) substr($dateStr, 0, 4);
+            
+            if ($year >= 2000 && $year <= 2100) {
+                // This is already a Nepali date, just format it according to the requested format
+                return self::formatNepaliDateString($dateStr, $format);
+            } else {
+                // This is an English date, convert to Nepali first
+                $bsDate = self::convertToBS($dateInput);
+                $date = \Carbon\Carbon::parse($dateInput);
+                
+                return self::formatBSDate($bsDate, $date, $format);
+            }
+        } catch (\Exception $e) {
+            // If all else fails, return null to trigger fallback
+            return null;
+        }
+    }
+    
+    /**
+     * Format a Nepali date string according to the requested format
+     */
+    private static function formatNepaliDateString($dateStr, $format)
+    {
+        switch ($format) {
+            case 'nepali-numbers':
+                // Convert English digits to Nepali Unicode
+                return self::convertToNepaliNumbers($dateStr);
+                       
+            case 'english-numbers':
+                // Return as-is (already in English format)
+                return $dateStr;
+                
+            case 'nepali-text':
+                // For text format, we need to convert to English first, then to BS
+                try {
+                    $bsDate = self::convertToBS($dateStr);
+                    $date = \Carbon\Carbon::parse($dateStr);
+                    return self::formatBSDate($bsDate, $date, $format);
+                } catch (\Exception $e) {
+                    return $dateStr; // Fallback to original
+                }
+                
+            default:
+                return self::convertToNepaliNumbers($dateStr);
+        }
+    }
+    
+    /**
+     * Format BS date according to the requested format
+     */
+    private static function formatBSDate($bsDate, $date, $format)
+    {
         switch ($format) {
             case 'nepali-numbers':
                 // Format: २०८२-०५-२९
@@ -269,7 +336,6 @@ class NepaliDateConverter
                 
             case 'nepali-text':
                 // Format: बुध, असोज २९, २०८२
-                // Use the day of week from the English date, not the BS date
                 $dayName = self::$nepaliDays[$date->dayOfWeek] ?? 'बुध';
                 $monthName = self::$nepaliMonths[$bsDate['month'] - 1] ?? 'असोज';
                 return "{$dayName}, {$monthName} " . self::convertToNepaliNumbers($bsDate['day']) . ", " . self::convertToNepaliNumbers($bsDate['year']);

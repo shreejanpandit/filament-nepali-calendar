@@ -3,93 +3,76 @@
 namespace Shreejan\FilamentNepaliDatePicker\Forms\Components;
 
 use Closure;
-use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Field;
+use Shreejan\FilamentNepaliDatePicker\Rules\NepaliDateRule;
 
-class NepaliDatePicker extends DatePicker
+class NepaliDatePicker extends Field
 {
     protected string $view = 'filament-nepali-date-picker::components.nepali-date-picker';
 
-    private bool|string $onlyLocales = true;
-    private bool $weekdaysMin = true;
-    private string $mode = 'light';
-    private bool $miniEnglishDates = false;
+    protected bool|string $onlyLocales = true;
+    protected bool $weekdaysMin = true;
+    protected string $mode = 'light';
+    protected bool $miniEnglishDates = false;
     protected string|Closure|null $displayFormat = 'ne'; // Default: Nepali digits (२०८२-०७-२६)
     
     // Additional options from documentation
-    private bool $unicodeDate = true;
-    private string $language = 'nepali';
-    private bool $inline = false;
-    private string $animation = 'slide';
-    private bool $range = false;
-    private bool $multiple = false;
-    private bool $disableToday = false;
-    private array $disableDates = [];
-    private int|null $disableDaysBefore = null;
-    private int|null $disableDaysAfter = null;
-    private array|null $nepaliMinDate = null;
-    private array|null $nepaliMaxDate = null;
-    private string|null $nepaliContainer = null;
-    private string|null $nepaliValue = null;
+    protected bool $unicodeDate = true;
+    protected string $language = 'nepali';
+    protected bool $inline = false;
+    protected string $animation = 'slide';
+    protected bool $range = false;
+    protected bool $multiple = false;
+    protected bool $disableToday = false;
+    protected array $disableDates = [];
+    protected int $disableDaysBefore = 0;
+    protected int $disableDaysAfter = 0;
+    protected string $dateFormat = 'YYYY-MM-DD';
+    protected ?string $minDate = null;
+    protected ?string $maxDate = null;
+    protected ?Closure $onSelect = null;
+    protected ?Closure $onClose = null;
 
-    public function onlyLocales(array $onlyLocales = []): static
+
+    public function onlyLocales(bool|string $onlyLocales): static
     {
-        $this->onlyLocales = is_array($onlyLocales) ? implode(',', $onlyLocales) : (is_bool($onlyLocales) ? (int) $onlyLocales : $onlyLocales);
-        $this->extraAttributes(['onlyLocales' => $this->onlyLocales, 'weekdaysMin' => (int) $this->weekdaysMin], false);
+        $this->onlyLocales = $onlyLocales;
+        $this->extraAttributes(['onlyLocales' => is_string($onlyLocales) ? $onlyLocales : (int) $onlyLocales], false);
         return $this;
     }
 
-    public function weekdaysMin(bool $weekdaysMin = true): static
+    public function weekdaysMin(bool $weekdaysMin): static
     {
         $this->weekdaysMin = $weekdaysMin;
-        $this->extraAttributes(['weekdaysMin' => (int) $this->weekdaysMin, 'onlyLocales' => $this->onlyLocales], false);
-        return $this;
-    }
-
-    public function dateFormat(string $format): static
-    {
-        $this->extraAttributes(['dateFormat' => $format], false);
-        return $this;
-    }
-
-    public function displayFormat(string|Closure|null $format): static
-    {
-        $this->displayFormat = $format;
-        $this->extraAttributes(['displayFormat' => $this->displayFormat], false);
-        return $this;
-    }
-
-    public function nepaliDigits(): static
-    {
-        $this->displayFormat = 'ne';
-        $this->extraAttributes(['displayFormat' => 'ne'], false);
-        return $this;
-    }
-
-    public function englishDigits(): static
-    {
-        $this->displayFormat = 'en';
-        $this->extraAttributes(['displayFormat' => 'en'], false);
+        $this->extraAttributes(['weekdaysMin' => (int) $weekdaysMin], false);
         return $this;
     }
 
     public function mode(string $mode): static
     {
         $this->mode = $mode;
-        $this->extraAttributes(['mode' => $this->mode], false);
+        $this->extraAttributes(['mode' => $mode], false);
         return $this;
     }
 
-    public function miniEnglishDates(bool $miniEnglishDates = true): static
+    public function miniEnglishDates(bool $miniEnglishDates): static
     {
         $this->miniEnglishDates = $miniEnglishDates;
-        $this->extraAttributes(['miniEnglishDates' => $this->miniEnglishDates], false);
+        $this->extraAttributes(['miniEnglishDates' => (int) $miniEnglishDates], false);
         return $this;
     }
 
-    public function unicodeDate(bool $unicodeDate = true): static
+    public function displayFormat(string|Closure|null $format): static
+    {
+        $this->displayFormat = $format;
+        $this->extraAttributes(['displayFormat' => $format], false);
+        return $this;
+    }
+
+    public function unicodeDate(bool $unicodeDate): static
     {
         $this->unicodeDate = $unicodeDate;
-        $this->extraAttributes(['unicodeDate' => $unicodeDate], false);
+        $this->extraAttributes(['unicodeDate' => (int) $unicodeDate], false);
         return $this;
     }
 
@@ -100,10 +83,10 @@ class NepaliDatePicker extends DatePicker
         return $this;
     }
 
-    public function inline(bool $inline = true): static
+    public function inline(bool $inline): static
     {
         $this->inline = $inline;
-        $this->extraAttributes(['inline' => $inline], false);
+        $this->extraAttributes(['inline' => (int) $inline], false);
         return $this;
     }
 
@@ -114,101 +97,112 @@ class NepaliDatePicker extends DatePicker
         return $this;
     }
 
-    public function range(bool $range = true): static
+    public function range(bool $range): static
     {
         $this->range = $range;
-        $this->extraAttributes(['range' => $range], false);
+        $this->extraAttributes(['range' => (int) $range], false);
         return $this;
     }
 
-    public function multiple(bool $multiple = true): static
+    public function multiple(bool $multiple): static
     {
         $this->multiple = $multiple;
-        $this->extraAttributes(['multiple' => $multiple], false);
+        $this->extraAttributes(['multiple' => (int) $multiple], false);
         return $this;
     }
 
-    public function disableToday(bool $disableToday = true): static
+    public function disableToday(bool $disableToday): static
     {
         $this->disableToday = $disableToday;
-        $this->extraAttributes(['disableToday' => $disableToday], false);
+        $this->extraAttributes(['disableToday' => (int) $disableToday], false);
         return $this;
     }
 
-    public function disableDates(array $dates): static
+    public function disableDates(array $disableDates): static
     {
-        $this->disableDates = $dates;
-        $this->extraAttributes(['disableDates' => $dates], false);
+        $this->disableDates = $disableDates;
+        $this->extraAttributes(['disableDates' => $disableDates], false);
         return $this;
     }
 
-    public function disableDaysBefore(int $days): static
+    public function disableDaysBefore(int $disableDaysBefore): static
     {
-        $this->disableDaysBefore = $days;
-        $this->extraAttributes(['disableDaysBefore' => $days], false);
+        $this->disableDaysBefore = $disableDaysBefore;
+        $this->extraAttributes(['disableDaysBefore' => $disableDaysBefore], false);
         return $this;
     }
 
-    public function disableDaysAfter(int $days): static
+    public function disableDaysAfter(int $disableDaysAfter): static
     {
-        $this->disableDaysAfter = $days;
-        $this->extraAttributes(['disableDaysAfter' => $days], false);
+        $this->disableDaysAfter = $disableDaysAfter;
+        $this->extraAttributes(['disableDaysAfter' => $disableDaysAfter], false);
         return $this;
     }
 
-    public function nepaliMinDate(int $year, int $month, int $day): static
+    public function dateFormat(string $dateFormat): static
     {
-        $this->nepaliMinDate = ['year' => $year, 'month' => $month, 'day' => $day];
-        $this->extraAttributes(['nepaliMinDate' => $this->nepaliMinDate], false);
+        $this->dateFormat = $dateFormat;
+        $this->extraAttributes(['dateFormat' => $dateFormat], false);
         return $this;
     }
 
-    public function nepaliMaxDate(int $year, int $month, int $day): static
+    public function minDate(?string $minDate): static
     {
-        $this->nepaliMaxDate = ['year' => $year, 'month' => $month, 'day' => $day];
-        $this->extraAttributes(['nepaliMaxDate' => $this->nepaliMaxDate], false);
+        $this->minDate = $minDate;
+        $this->extraAttributes(['minDate' => $minDate], false);
         return $this;
     }
 
-    public function nepaliContainer(string $container): static
+    public function maxDate(?string $maxDate): static
     {
-        $this->nepaliContainer = $container;
-        $this->extraAttributes(['nepaliContainer' => $container], false);
+        $this->maxDate = $maxDate;
+        $this->extraAttributes(['maxDate' => $maxDate], false);
         return $this;
     }
 
-    public function nepaliDefaultValue(string $value): static
+    public function onSelect(?Closure $onSelect): static
     {
-        $this->nepaliValue = $value;
-        $this->extraAttributes(['nepaliValue' => $value], false);
+        $this->onSelect = $onSelect;
         return $this;
     }
+
+    public function onClose(?Closure $onClose): static
+    {
+        $this->onClose = $onClose;
+        return $this;
+    }
+
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->native(false);
+        
+        // Add our custom validation that understands BS dates
+        $this->rules([
+            'required',
+            'string',
+            new NepaliDateRule(),
+        ]);
+        
         $this->extraAttributes([
             'weekdaysMin' => (int) $this->weekdaysMin,
             'onlyLocales' => is_string($this->onlyLocales) ? $this->onlyLocales : (int) $this->onlyLocales,
             'mode' => $this->mode,
-            'miniEnglishDates' => $this->miniEnglishDates,
-            'displayFormat' => $this->evaluate($this->displayFormat),
-            'unicodeDate' => $this->unicodeDate,
+            'miniEnglishDates' => (int) $this->miniEnglishDates,
+            'displayFormat' => $this->displayFormat,
+            'unicodeDate' => (int) $this->unicodeDate,
             'language' => $this->language,
-            'inline' => $this->inline,
+            'inline' => (int) $this->inline,
             'animation' => $this->animation,
-            'range' => $this->range,
-            'multiple' => $this->multiple,
-            'disableToday' => $this->disableToday,
+            'range' => (int) $this->range,
+            'multiple' => (int) $this->multiple,
+            'disableToday' => (int) $this->disableToday,
             'disableDates' => $this->disableDates,
             'disableDaysBefore' => $this->disableDaysBefore,
             'disableDaysAfter' => $this->disableDaysAfter,
-            'nepaliMinDate' => $this->nepaliMinDate,
-            'nepaliMaxDate' => $this->nepaliMaxDate,
-            'nepaliContainer' => $this->nepaliContainer,
-            'nepaliValue' => $this->nepaliValue,
+            'dateFormat' => $this->dateFormat,
+            'minDate' => $this->minDate,
+            'maxDate' => $this->maxDate,
         ], true);
-        $this->suffixIcon('heroicon-o-calendar', isInline: true);
     }
 }

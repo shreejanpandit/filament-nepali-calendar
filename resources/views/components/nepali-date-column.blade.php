@@ -6,16 +6,8 @@
     $weekdaysMin = $getWeekdaysMin();
     $displayFormat = $getDisplayFormat();
     
-    $nepaliDate = null;
-    if ($dateValue) {
-        try {
-            // Use our own converter (same logic as JavaScript picker)
-            $nepaliDate = NepaliDateConverter::formatNepaliDate($dateValue, $displayFormat);
-        } catch (Exception $e) {
-            // Fallback to original date if conversion fails
-            $nepaliDate = null;
-        }
-    }
+    // Use the converter's built-in method for consistent formatting
+    $nepaliDate = NepaliDateConverter::formatNepaliDate($dateValue, $displayFormat);
 @endphp
 
 @if($dateValue && $nepaliDate)
