@@ -1,7 +1,3 @@
-// Nepali Date Converter - JavaScript version
-// Based on the TypeScript library from subeshb1/Nepali-Date
-
-// Date configuration mapping
 const dateConfigMap = {
   '2000': { Baisakh: 30, Jestha: 32, Asar: 31, Shrawan: 32, Bhadra: 31, Aswin: 30, Kartik: 30, Mangsir: 30, Poush: 29, Magh: 30, Falgun: 29, Chaitra: 31 },
   '2001': { Baisakh: 31, Jestha: 31, Asar: 32, Shrawan: 31, Bhadra: 31, Aswin: 31, Kartik: 30, Mangsir: 29, Poush: 30, Magh: 29, Falgun: 30, Chaitra: 30 },
@@ -85,7 +81,7 @@ const dateConfigMap = {
   '2079': { Baisakh: 31, Jestha: 31, Asar: 32, Shrawan: 31, Bhadra: 31, Aswin: 31, Kartik: 30, Mangsir: 29, Poush: 30, Magh: 29, Falgun: 30, Chaitra: 30 },
   '2080': { Baisakh: 31, Jestha: 32, Asar: 31, Shrawan: 32, Bhadra: 31, Aswin: 30, Kartik: 30, Mangsir: 30, Poush: 29, Magh: 29, Falgun: 30, Chaitra: 30 },
   '2081': { Baisakh: 31, Jestha: 32, Asar: 31, Shrawan: 32, Bhadra: 31, Aswin: 30, Kartik: 30, Mangsir: 30, Poush: 29, Magh: 30, Falgun: 29, Chaitra: 31 },
-  '2082': { Baisakh: 31, Jestha: 32, Asar: 31, Shrawan: 32, Bhadra: 31, Aswin: 31, Kartik: 30, Mangsir: 30, Poush: 29, Magh: 29, Falgun: 30, Chaitra: 31 },
+  '2082': { Baisakh: 31, Jestha: 31, Asar: 32, Shrawan: 31, Bhadra: 31, Aswin: 31, Kartik: 30, Mangsir: 29, Poush: 30, Magh: 29, Falgun: 30, Chaitra: 30 },
   '2083': { Baisakh: 31, Jestha: 31, Asar: 32, Shrawan: 31, Bhadra: 31, Aswin: 31, Kartik: 30, Mangsir: 29, Poush: 30, Magh: 29, Falgun: 30, Chaitra: 30 },
   '2084': { Baisakh: 31, Jestha: 32, Asar: 31, Shrawan: 32, Bhadra: 31, Aswin: 30, Kartik: 30, Mangsir: 30, Poush: 29, Magh: 29, Falgun: 30, Chaitra: 31 },
   '2085': { Baisakh: 30, Jestha: 32, Asar: 31, Shrawan: 32, Bhadra: 31, Aswin: 30, Kartik: 30, Mangsir: 30, Poush: 29, Magh: 30, Falgun: 29, Chaitra: 31 },
@@ -96,14 +92,12 @@ const dateConfigMap = {
   '2090': { Baisakh: 30, Jestha: 32, Asar: 31, Shrawan: 32, Bhadra: 31, Aswin: 30, Kartik: 30, Mangsir: 30, Poush: 29, Magh: 30, Falgun: 30, Chaitra: 30 }
 };
 
-// Constants
 const EPOCH_YEAR = 2000;
 const COMPLETED_DAYS = 1;
 const TOTAL_DAYS = 0;
 const MAX_DAY = 33238;
 const MIN_DAY = 1;
 
-// Begin English date (epoch)
 const beginEnglish = {
   year: 1943,
   month: 3,
@@ -111,7 +105,6 @@ const beginEnglish = {
   day: 3
 };
 
-// Format object for Nepali and English
 const formatObj = {
   en: {
     day: {
@@ -137,7 +130,6 @@ const formatObj = {
   }
 };
 
-// Helper functions
 function getYearIndex(year) {
   return year - EPOCH_YEAR;
 }
@@ -153,10 +145,8 @@ function mod(m, val) {
   return val % m;
 }
 
-// Initialize year month days mapping
 const yearMonthDaysMapping = Object.values(dateConfigMap).map((year) => Object.values(year));
 
-// Initialize month days mappings
 const monthDaysMappings = yearMonthDaysMapping.map((yearMappings) => {
   let daySum = 0;
   return yearMappings.map((monthDays) => {
@@ -166,7 +156,6 @@ const monthDaysMappings = yearMonthDaysMapping.map((yearMappings) => {
   });
 });
 
-// Initialize year days mapping
 let daysPassed = 0;
 const yearDaysMapping = yearMonthDaysMapping.map((yearMappings) => {
   const daysInYear = yearMappings.reduce((acc, x) => acc + x, 0);
@@ -175,7 +164,6 @@ const yearDaysMapping = yearMonthDaysMapping.map((yearMappings) => {
   return yearDaysPassed;
 });
 
-// Core conversion functions
 function findPassedDays(year, month, date) {
   try {
     const yearIndex = getYearIndex(year);
@@ -238,7 +226,6 @@ function mapDaysToDateAD(daysPassed) {
   };
 }
 
-// Main conversion functions
 function convertToAD(bsDateObject) {
   try {
     const daysPassed = findPassedDays(bsDateObject.year, bsDateObject.month, bsDateObject.date);
@@ -273,7 +260,6 @@ function convertToBS(adDateObject) {
   }
 }
 
-// Formatting functions
 function mapLanguageNumber(dateNumber, language) {
   return dateNumber
     .split('')
@@ -316,7 +302,6 @@ function format(bsDate, stringFormat, language) {
     .replace(/\\/g, '');
 }
 
-// Public API functions
 function adToBs(adDateString) {
   try {
     const adDate = new Date(adDateString);
@@ -324,18 +309,17 @@ function adToBs(adDateString) {
     const bs = result.BS;
     return `${bs.year}-${(bs.month + 1).toString().padStart(2, '0')}-${bs.date.toString().padStart(2, '0')}`;
   } catch (error) {
-    console.error('Error converting AD to BS:', error);
-    return adDateString; // Return original if conversion fails
+    // Silent error handling
+    return adDateString;
   }
 }
 
 function bsToAd(bsDateString) {
   try {
-    // Parse BS date string (YYYY-MM-DD format)
     const parts = bsDateString.split('-');
     if (parts.length === 3) {
       const year = parseInt(parts[0]);
-      const month = parseInt(parts[1]) - 1; // Convert to 0-based month
+      const month = parseInt(parts[1]) - 1;
       const date = parseInt(parts[2]);
       
       const result = convertToAD({ year, month, date });
@@ -344,26 +328,23 @@ function bsToAd(bsDateString) {
     }
     throw new Error('Invalid BS date format');
   } catch (error) {
-    console.error('Error converting BS to AD:', error);
-    return bsDateString; // Return original if conversion fails
+    // Silent error handling
+    return bsDateString;
   }
 }
 
-// Compatibility wrapper to make nepali-date-converter compatible with nepali-date-picker.js
-// nepali-date-picker.js expects 1-based months (1-12), but nepali-date-converter returns 0-based months (0-11)
 function convertToBSCompatible(adDateObject) {
   const result = convertToBS(adDateObject);
   return {
     AD: result.AD,
     BS: {
       ...result.BS,
-      month: result.BS.month + 1 // Convert 0-based to 1-based month
+      month: result.BS.month + 1
     }
   };
 }
 
 function convertToADCompatible(bsDateObject) {
-  // Convert 1-based month to 0-based for internal processing
   const adjustedBsDate = {
     ...bsDateObject,
     month: bsDateObject.month - 1
@@ -371,7 +352,6 @@ function convertToADCompatible(bsDateObject) {
   return convertToAD(adjustedBsDate);
 }
 
-// Export functions for global use
 window.NepaliDateConverter = {
   adToBs,
   bsToAd,

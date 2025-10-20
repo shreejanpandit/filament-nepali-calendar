@@ -14,9 +14,7 @@ class NepaliDatePicker extends Field
     protected bool $weekdaysMin = true;
     protected string $mode = 'light';
     protected bool $miniEnglishDates = false;
-    protected string|Closure|null $displayFormat = 'ne'; // Default: Nepali digits (२०८२-०७-२६)
-    
-    // Additional options from documentation
+    protected string|Closure|null $displayFormat = 'ne';
     protected bool $unicodeDate = true;
     protected string $language = 'nepali';
     protected bool $inline = false;
@@ -173,11 +171,31 @@ class NepaliDatePicker extends Field
     }
 
 
+    public function getMode(): string
+    {
+        return $this->mode;
+    }
+
+    public function getMiniEnglishDates(): bool
+    {
+        return $this->miniEnglishDates;
+    }
+
+    public function getUnicodeDate(): bool
+    {
+        return $this->unicodeDate;
+    }
+
+    public function getDateFormat(): string
+    {
+        return $this->dateFormat;
+    }
+
+
     protected function setUp(): void
     {
         parent::setUp();
         
-        // Add our custom validation that understands BS dates
         $this->rules([
             'required',
             'string',

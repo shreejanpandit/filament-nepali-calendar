@@ -24,11 +24,10 @@ class NepaliDateRule implements ValidationRule
             
             // If it's a BS year (2000-2100), it's automatically valid
             if ($year >= 2000 && $year <= 2100) {
-                return; // Valid BS date - no further validation needed
+                return;
             }
         }
         
-        // For non-BS dates, validate as normal date
         if (!strtotime($value)) {
             $fail("The date {$value} is not a valid date format.");
         }

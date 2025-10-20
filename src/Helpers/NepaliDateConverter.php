@@ -4,9 +4,6 @@ namespace Shreejan\FilamentNepaliDatePicker\Helpers;
 
 class NepaliDateConverter
 {
-    /**
-     * Date configuration mapping - same as JavaScript converter
-     */
     private static $dateConfigMap = [
         '2000' => ['Baisakh' => 30, 'Jestha' => 32, 'Asar' => 31, 'Shrawan' => 32, 'Bhadra' => 31, 'Aswin' => 30, 'Kartik' => 30, 'Mangsir' => 30, 'Poush' => 29, 'Magh' => 30, 'Falgun' => 29, 'Chaitra' => 31],
         '2001' => ['Baisakh' => 31, 'Jestha' => 31, 'Asar' => 32, 'Shrawan' => 31, 'Bhadra' => 31, 'Aswin' => 31, 'Kartik' => 30, 'Mangsir' => 29, 'Poush' => 30, 'Magh' => 29, 'Falgun' => 30, 'Chaitra' => 30],
@@ -107,7 +104,6 @@ class NepaliDateConverter
     private static $nepaliMonths = ['बैशाख', 'जेठ', 'असार', 'साउन', 'भदौ', 'असोज', 'कार्तिक', 'मंसिर', 'पौष', 'माघ', 'फागुन', 'चैत'];
     private static $nepaliDays = ['आइत', 'सोम', 'मंगल', 'बुध', 'बिही', 'शुक्र', 'शनि'];
 
-    // Pre-computed mappings like JavaScript
     private static $yearDaysMapping = null;
     private static $monthDaysMappings = null;
 
@@ -120,13 +116,11 @@ class NepaliDateConverter
             return;
         }
 
-        // Initialize year month days mapping
         $yearMonthDaysMapping = [];
         foreach (self::$dateConfigMap as $year => $months) {
             $yearMonthDaysMapping[] = array_values($months);
         }
 
-        // Initialize month days mappings
         self::$monthDaysMappings = [];
         foreach ($yearMonthDaysMapping as $yearMappings) {
             $daySum = 0;
@@ -138,7 +132,6 @@ class NepaliDateConverter
             self::$monthDaysMappings[] = $monthMapping;
         }
 
-        // Initialize year days mapping
         $daysPassed = 0;
         self::$yearDaysMapping = [];
         foreach ($yearMonthDaysMapping as $yearMappings) {
@@ -166,13 +159,12 @@ class NepaliDateConverter
         self::initializeMappings();
 
         $MIN_DAY = 0;
-        $MAX_DAY = 33000; // Approximate max days
+        $MAX_DAY = 33000;
 
         if ($daysPassed < $MIN_DAY || $daysPassed > $MAX_DAY) {
             throw new \Exception("The epoch difference is not within the boundaries {$MIN_DAY} - {$MAX_DAY}");
         }
 
-        // Find year index
         $yearIndex = -1;
         for ($i = 0; $i < count(self::$yearDaysMapping); $i++) {
             $year = self::$yearDaysMapping[$i];
@@ -188,7 +180,6 @@ class NepaliDateConverter
 
         $monthRemainder = $daysPassed - self::$yearDaysMapping[$yearIndex][1];
         
-        // Find month index
         $monthIndex = -1;
         for ($i = 0; $i < count(self::$monthDaysMappings[$yearIndex]); $i++) {
             $month = self::$monthDaysMappings[$yearIndex][$i];
@@ -218,18 +209,16 @@ class NepaliDateConverter
     {
         $date = \Carbon\Carbon::parse($englishDate);
         $year = $date->year;
-        $month = $date->month - 1; // Convert to 0-based month
+        $month = $date->month - 1;
         $day = $date->day;
         
-        // Calculate days since epoch (April 13, 1943) - same as JavaScript
         $daysPassed = self::findPassedDaysAD($year, $month, $day);
         
-        // Convert to BS using the same algorithm as JavaScript
         $bsDate = self::mapDaysToDate($daysPassed);
         
         return [
             'year' => $bsDate['year'],
-            'month' => $bsDate['month'] + 1, // Convert to 1-based month
+            'month' => $bsDate['month'] + 1,
             'day' => $bsDate['date']
         ];
     }
@@ -243,12 +232,10 @@ class NepaliDateConverter
         $numberStr = (string) $number;
         for ($i = 0; $i < strlen($numberStr); $i++) {
             $char = $numberStr[$i];
-            // Only convert if it's a digit (0-9)
             if (is_numeric($char) && $char >= '0' && $char <= '9') {
                 $digit = (int) $char;
                 $result .= self::$nepaliNumbers[$digit] ?? $char;
             } else {
-                // Keep non-digit characters as-is (like dashes, spaces, etc.)
                 $result .= $char;
             }
         }
@@ -261,7 +248,6 @@ class NepaliDateConverter
     public static function formatNepaliDate($dateInput, $format = 'nepali-numbers')
     {
         try {
-            // Handle different input types
             if (is_string($dateInput)) {
                 $dateStr = $dateInput;
             } elseif ($dateInput instanceof \Carbon\Carbon) {
@@ -270,21 +256,17 @@ class NepaliDateConverter
                 $dateStr = (string) $dateInput;
             }
             
-            // Check if this is already a Nepali date (year >= 2000)
             $year = (int) substr($dateStr, 0, 4);
             
             if ($year >= 2000 && $year <= 2100) {
-                // This is already a Nepali date, just format it according to the requested format
                 return self::formatNepaliDateString($dateStr, $format);
             } else {
-                // This is an English date, convert to Nepali first
                 $bsDate = self::convertToBS($dateInput);
                 $date = \Carbon\Carbon::parse($dateInput);
                 
                 return self::formatBSDate($bsDate, $date, $format);
             }
         } catch (\Exception $e) {
-            // If all else fails, return null to trigger fallback
             return null;
         }
     }
@@ -296,21 +278,18 @@ class NepaliDateConverter
     {
         switch ($format) {
             case 'nepali-numbers':
-                // Convert English digits to Nepali Unicode
                 return self::convertToNepaliNumbers($dateStr);
                        
             case 'english-numbers':
-                // Return as-is (already in English format)
                 return $dateStr;
                 
             case 'nepali-text':
-                // For text format, we need to convert to English first, then to BS
                 try {
                     $bsDate = self::convertToBS($dateStr);
                     $date = \Carbon\Carbon::parse($dateStr);
                     return self::formatBSDate($bsDate, $date, $format);
                 } catch (\Exception $e) {
-                    return $dateStr; // Fallback to original
+                    return $dateStr;
                 }
                 
             default:
@@ -325,17 +304,14 @@ class NepaliDateConverter
     {
         switch ($format) {
             case 'nepali-numbers':
-                // Format: २०८२-०५-२९
                 return self::convertToNepaliNumbers($bsDate['year']) . '-' . 
                        self::convertToNepaliNumbers(str_pad($bsDate['month'], 2, '0', STR_PAD_LEFT)) . '-' . 
                        self::convertToNepaliNumbers(str_pad($bsDate['day'], 2, '0', STR_PAD_LEFT));
                        
             case 'english-numbers':
-                // Format: 2082-05-29
                 return $bsDate['year'] . '-' . str_pad($bsDate['month'], 2, '0', STR_PAD_LEFT) . '-' . str_pad($bsDate['day'], 2, '0', STR_PAD_LEFT);
                 
             case 'nepali-text':
-                // Format: बुध, असोज २९, २०८२
                 $dayName = self::$nepaliDays[$date->dayOfWeek] ?? 'बुध';
                 $monthName = self::$nepaliMonths[$bsDate['month'] - 1] ?? 'असोज';
                 return "{$dayName}, {$monthName} " . self::convertToNepaliNumbers($bsDate['day']) . ", " . self::convertToNepaliNumbers($bsDate['year']);
